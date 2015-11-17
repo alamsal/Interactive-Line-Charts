@@ -3,9 +3,12 @@
     // plot a graph of miles vs. time
 
     function parser(d) {
-        d.pValue = +d.Value;
-        d.pDate = new Date(d.Date);
-        return d;
+        
+            d.pValue = +d.Value;
+            d.pDate = new Date(d.Date);
+            return d;    
+        
+        
     }
     
     var format = d3.time.format("%m/%d/%Y");
@@ -24,7 +27,7 @@
         .range([0, width]);
     
         var y = d3.scale.linear()
-        .domain([0, 10000])
+        .domain([0, 150])
         .range([height, 0]);
     
         var xAxis = d3.svg.axis()
@@ -46,25 +49,25 @@
     
         // function to draw the line
         var line = d3.svg.line()
-        .x(function(d) { return x(d.pDate); } )
-        .y(function(d) { return y(d.pValue); } );
+        .x(function(d) { if(d.pValue>0){
+                return x(d.pDate);    
+            }  } )
+        .y(function(d) { if(d.pValue>0){
+                return y(d.pValue);    
+            } } );
     
-    /*
+    
         //Mouseover tip
         var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([120, 40])
         .html(function(d) {
-            return "<strong>" + d.Odometer +
-                    " miles</strong><br>" +
-            d.MPG + " mpg" + "<br>" +
-            format(d.pDate) + "<br>" + 
-            d.Brand + ", " + d.City +
-                    " " + d.State + "<br>";
-        });
+            return "<strong>" + d.pDate +                   
+                    " " + d.pValue + "</strong>";
+             });
     
         svg.call(tip);
-    */
+    
         // add the x axis and x-label
         svg.append("g")
         .attr("class", "x axis")
@@ -112,8 +115,18 @@
         .data(csvdata)
         .enter().append("circle")
         .attr('class', 'datapoint')
-        .attr('cx', function(d) { return x(d.pDate); })
-        .attr('cy', function(d) { return y(d.pValue); })
+        .attr('cx', function(d) {
+              if(d.pValue>0){
+                return x(d.pDate);    
+            } 
+         })
+        .attr('cy', function(d) { 
+            if(d.pValue>0){
+                return y(d.pValue);    
+            }
+             
+            
+            })
         .attr('r', 6)
         .attr('fill', 'white')
         .attr('stroke', 'steelblue')
