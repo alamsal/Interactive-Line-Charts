@@ -1,0 +1,20 @@
+{
+  "name": "leaflet-test",
+  "version": "1.0.0",
+  "description": "Leaflet Test",
+  "private": true,
+  "devDependencies": {
+    "del": "1.1.1",
+    "gulp": "3.8.11",
+    "gulp-angular-filesort": "1.0.4",
+    "gulp-connect": "2.2.0",
+    "gulp-debug": "2.0.0",
+    "gulp-ignore": "1.2.1",
+    "gulp-inject": "1.1.1",
+    "gulp-jshint": "1.9.0",
+    "gulp-load-plugins": "0.8.0",
+    "gulp-ng-annotate": "0.4.3",
+    "gulp-sass": "^2.1.0",
+    "gulp-util": "3.0.1"
+  }
+}
