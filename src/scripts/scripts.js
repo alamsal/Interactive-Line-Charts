@@ -3,13 +3,13 @@
     // plot a graph of miles vs. time
 
     function parser(d) {
-        
-            d.pValue = +d.Value;
-            d.pDate = new Date(d.Date);
-            return d; 
+        var format = d3.time.format("%Y-%m-%d");
+        d.pValue = +d.Value;
+        d.pDate = format.parse(d.Date);
+        return d; 
     }
     
-    var format = d3.time.format("%m/%d/%Y");
+    
     
     function milesovertime(csvdata) {
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
@@ -118,8 +118,9 @@
         .on('mouseout', tip.hide);
     }
     // Read in .csv data and make graph
-    d3.csv("assets/nuttersridge_formatted.csv", parser,
+    d3.csv("assets/new_format_2015only.csv", parser,
         function(error, csvData) {
+            
         var cleanData = csvData.filter(function(row){
            if(row.Value !='NA'){
                return row.Value;
