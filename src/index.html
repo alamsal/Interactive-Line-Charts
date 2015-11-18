@@ -7,11 +7,33 @@
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src="scripts/scripts.js"></script>
     <style>
-        .line {
-        fill: red;
+    
+      .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+      }
+      path {
         stroke: steelblue;
-        stroke-width: 1.5px;
-        }
+        stroke-width: 3;
+        fill: none;
+      }
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      .datapoint:hover{
+	fill: steelblue;
+      }
+      .xlabel, .ylabel {
+        font-weight:bold;
+	font-size:20px;
+      }
+   
     </style>
 </head>
 <body>

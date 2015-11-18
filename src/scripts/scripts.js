@@ -20,7 +20,7 @@
     
         var minDate = csvdata[0].pDate;
         var maxDate = csvdata[csvdata.length - 1].pDate;
-        console.log(maxDate);
+        
         // Set up time based x axis
         var x = d3.time.scale()
         .domain([minDate, maxDate])
@@ -136,8 +136,14 @@
     }
     // Read in .csv data and make graph
     d3.csv("assets/nuttersridge_formatted.csv", parser,
-        function(error, csvdata) {
-        milesovertime(csvdata);
+        function(error, csvData) {
+        var cleanData = csvData.filter(function(row){
+           if(row.Value !='NA'){
+               return row.Value;
+           }
+           return false;
+        });
+       milesovertime(cleanData);
     }); 
 
 })();
