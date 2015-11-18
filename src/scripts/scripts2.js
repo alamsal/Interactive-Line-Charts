@@ -41,7 +41,8 @@
         
         var xAxis = d3.svg.axis()
         .scale(x)
-        .ticks(10)
+        .ticks(0)
+        .tickFormat("hi")
         .orient("bottom");
     
         var yAxis = d3.svg.axis()
@@ -108,9 +109,13 @@
             .attr('class', 'datapoint')
             .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
             .attr('cy', function(d) { return y(d.pValue); })
-            .attr('r', 6)
-            .attr('fill', 'white')
-            .attr('stroke', 'steelblue')
+            .attr('r', 2.5)
+            .attr('fill', 'black')
+            .attr('stroke', function(d){
+                // Add the colours dynamically
+                d.color = color(d.pYearOnly);
+                return d.color;
+            })
             .attr('stroke-width', '3')
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
