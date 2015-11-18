@@ -6,30 +6,37 @@
     function parser(d) {        
         d.pValue = +d.Value;
         d.pYearOnly = +d.Year;
-        d.pDate = format.parse(d.Date);
+        d.pDate = format.parse(d.Date);       
         return d; 
     } 
     
-    
+    Date.prototype.dayOfYear= function(){
+        var j1= new Date(this);
+        j1.setMonth(0, 0);
+        return Math.round((this-j1)/8.64e7);
+    };
+
     function plotMultiLineChart(chartData) {
-        
+       
+        console.log(chartData);
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
-        var width = 500 - margin.left - margin.right;
+        var width = 1000 - margin.left - margin.right;
         var height = 400 - margin.top - margin.bottom;
         
         
         var minDate = format.parse("2014-01-01");
         var maxDate = format.parse("2015-12-31");
         
-               
+         //alert(maxDate.dayOfYear());
+          
         // Set up time based x axis
         var x = d3.time.scale()
-        .domain([minDate, maxDate])
+        .domain([1, 366])
         .range([0, width]);
     
         var y = d3.scale.linear()
         .domain([0, 150])
-        .range([height, 0]);       
+        .range([height, 0]);    
         
         
         var xAxis = d3.svg.axis()
@@ -63,11 +70,13 @@
                     " " + d.pValue + "</strong>";
              });
     
-        svg.call(tip);
+        svg.call(tip);       
+
         
-        // function to draw the line
         var line = d3.svg.line()
-        .x(function(d) { return x(d.pDate); } )
+        .x(function(d) {
+            return x(d.pDate.dayOfYear());
+           } )
         .y(function(d) { return y(d.pValue); } ); 
            
         dataGroupByYear.forEach(function(d,i){
@@ -92,18 +101,19 @@
             .attr("class", "y axis")
             .call(yAxis);  
         
+        //Show chart circles
         svg.selectAll(".dot")
-        .data(chartData)
-        .enter().append("circle")
-        .attr('class', 'datapoint')
-        .attr('cx', function(d) { return x(d.pDate); })
-        .attr('cy', function(d) { return y(d.pValue); })
-        .attr('r', 6)
-        .attr('fill', 'white')
-        .attr('stroke', 'steelblue')
-        .attr('stroke-width', '3')
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
+            .data(chartData)
+            .enter().append("circle")
+            .attr('class', 'datapoint')
+            .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
+            .attr('cy', function(d) { return y(d.pValue); })
+            .attr('r', 6)
+            .attr('fill', 'white')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-width', '3')
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
                
     }
     
