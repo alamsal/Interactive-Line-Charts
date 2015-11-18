@@ -6,9 +6,7 @@
         
             d.pValue = +d.Value;
             d.pDate = new Date(d.Date);
-            return d;    
-        
-        
+            return d; 
     }
     
     var format = d3.time.format("%m/%d/%Y");
@@ -49,13 +47,8 @@
     
         // function to draw the line
         var line = d3.svg.line()
-        .x(function(d) { if(d.pValue>0){
-                return x(d.pDate);    
-            }  } )
-        .y(function(d) { if(d.pValue>0){
-                return y(d.pValue);    
-            } } );
-    
+        .x(function(d) { return x(d.pDate); } )
+        .y(function(d) { return y(d.pValue); } );    
     
         //Mouseover tip
         var tip = d3.tip()
@@ -115,18 +108,8 @@
         .data(csvdata)
         .enter().append("circle")
         .attr('class', 'datapoint')
-        .attr('cx', function(d) {
-              if(d.pValue>0){
-                return x(d.pDate);    
-            } 
-         })
-        .attr('cy', function(d) { 
-            if(d.pValue>0){
-                return y(d.pValue);    
-            }
-             
-            
-            })
+        .attr('cx', function(d) { return x(d.pDate); })
+        .attr('cy', function(d) { return y(d.pValue); })
         .attr('r', 6)
         .attr('fill', 'white')
         .attr('stroke', 'steelblue')
