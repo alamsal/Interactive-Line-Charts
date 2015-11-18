@@ -1,8 +1,9 @@
 (function(){
     
-    // plot a graph of miles vs. time
+    //Date format as of input CSV
     var format = d3.time.format("%Y-%m-%d");
     
+    //Append groomed variables on main object  
     function parser(d) {        
         d.pValue = +d.Value;
         d.pYearOnly = +d.Year;
@@ -10,45 +11,50 @@
         return d; 
     } 
     
+    //Compute DOY
     Date.prototype.dayOfYear= function(){
         var j1= new Date(this);
         j1.setMonth(0, 0);
         return Math.round((this-j1)/8.64e7);
     };
-
-    function plotMultiLineChart(chartData) {
-       
-        console.log(chartData);
+    
+    //Plot main chart
+    function plotMultiLineChart(chartData) {       
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
         var width = 1000 - margin.left - margin.right;
         var height = 400 - margin.top - margin.bottom;
         
+        //xAxis interval
+        var minDay = 1;
+        var maxDaY = 366;
         
-        var minDate = format.parse("2014-01-01");
-        var maxDate = format.parse("2015-12-31");
+        //yAxix interval
+        var yAxisMaxValue = 130;
+        var yAxisMinValue = 40;
         
-         //alert(maxDate.dayOfYear());
-          
-        // Set up time based x axis
+        //Axis ticks
+        var xAxisTickNumber = 10;
+        var yAxisTickNumber = 7;
+        
         var x = d3.time.scale()
-        .domain([1, 366])
-        .range([0, width]);
+            .domain([minDay,maxDaY])
+            .range([0, width]);
     
         var y = d3.scale.linear()
-        .domain([0, 150])
-        .range([height, 0]);    
+            .domain([yAxisMinValue,yAxisMaxValue])
+            .range([height, 0]);    
         
         
         var xAxis = d3.svg.axis()
-        .scale(x)
-        .ticks(0)
-        .tickFormat("hi")
-        .orient("bottom");
+            .scale(x)
+            .ticks(xAxisTickNumber)
+            .tickFormat("hi")
+            .orient("bottom");
     
         var yAxis = d3.svg.axis()
-        .scale(y)
-        .ticks(7)
-        .orient("left");
+            .scale(y)
+            .ticks(yAxisTickNumber)
+            .orient("left");
         
         //Group data sets by year
         var dataGroupByYear = d3.nest()
@@ -57,28 +63,28 @@
             
         // put the graph in the "miles" div
         var svg = d3.select("#graph").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
         //Mouseover tip
         var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([120, 40])
-        .html(function(d) {
-            return "<strong>" + d.pDate +                   
-                    " " + d.pValue + "</strong>";
-             });
+            .attr('class', 'd3-tip')
+            .offset([120, 40])
+            .html(function(d) {
+                return "<strong>" + d.pDate +                   
+                        " " + d.pValue + "</strong>";
+                });
     
         svg.call(tip);       
 
         
         var line = d3.svg.line()
-        .x(function(d) {
-            return x(d.pDate.dayOfYear());
-           } )
-        .y(function(d) { return y(d.pValue); } ); 
+            .x(function(d) {
+                return x(d.pDate.dayOfYear());
+            } )
+            .y(function(d) { return y(d.pValue); } ); 
            
         dataGroupByYear.forEach(function(d,i){
             svg.append("path")
@@ -87,6 +93,7 @@
                 // Add the colours dynamically
                 d.color = color(d.key);
                 return d.color; })
+            
             .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
             .attr("d",line(d.values));
         });
@@ -100,6 +107,7 @@
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
+            .style("stroke-dasharray", (5, 5))
             .call(yAxis);  
         
         //Show chart circles
