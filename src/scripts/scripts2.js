@@ -12,21 +12,41 @@
     } 
     
     //Compute DOY
-    Date.prototype.dayOfYear= function(){
+    Date.prototype.dayOfYear = function(){
         var j1= new Date(this);
         j1.setMonth(0, 0);
         return Math.round((this-j1)/8.64e7);
     };
     
+    Date.fromDayOfYear = function(n, y){
+        if(!y) y= new Date().getFullYear();
+        var d= new Date(y, 0, 1);        
+        return new Date(d.setMonth(0, n));       
+    };
+    
+    var generateXAxisLables = function(){
+        var formattedLabel = [];    
+        for(var day=1;day<366;++day){
+            var momentDate = Date.fromDayOfYear(day);
+            var label = pad(momentDate.getMonth() + 1)+"-"+pad(momentDate.getDate());
+            formattedLabel.push(label);    
+        }                
+        function pad(n){
+            return n > 9 ? "" + n: "0" + n;
+        }
+        return formattedLabel;
+    };
+    
     //Plot main chart
-    function plotMultiLineChart(chartData) {       
+    function plotMultiLineChart(chartData) {   
+            
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
-        var width = 1000 - margin.left - margin.right;
+        var width = 800 - margin.left - margin.right;
         var height = 400 - margin.top - margin.bottom;
         
         //xAxis interval
         var minDay = 1;
-        var maxDaY = 366;
+        var maxDaY = 365;
         
         //yAxix interval
         var yAxisMaxValue = 130;
@@ -36,7 +56,7 @@
         var xAxisTickNumber = 10;
         var yAxisTickNumber = 7;
         
-        var x = d3.time.scale()
+        var x = d3.scale.linear()
             .domain([minDay,maxDaY])
             .range([0, width]);
     
@@ -44,11 +64,14 @@
             .domain([yAxisMinValue,yAxisMaxValue])
             .range([height, 0]);    
         
-        
+        var xAxisLabels = generateXAxisLables();
         var xAxis = d3.svg.axis()
             .scale(x)
             .ticks(xAxisTickNumber)
-            .tickFormat("hi")
+            .tickFormat(function(d){  
+                 return(xAxisLabels[d]);              
+                
+                })
             .orient("bottom");
     
         var yAxis = d3.svg.axis()
@@ -111,6 +134,7 @@
                 .attr("class", "legend")
                 .text(d.key)
                 .on('click',function(){
+                    //Toggle chart
                    var active = d.active ? false : true;
                    var opacity = active ? 0 : 1;                
                    d3.select("#line_" + d.key).style("opacity", opacity); 
@@ -123,7 +147,12 @@
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
+            .call(xAxis)
+            .selectAll("text")  
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-65)" );
     
         // Add the Y Axis
         svg.append("g")
@@ -160,6 +189,9 @@
     // Read in .csv data and make graph
     d3.csv("assets/new_format_2015only.csv", parser,
         function(error, csvData) {
+        
+    
+        
         
         //Remove NA entries    
         var cleanData = csvData.filter(function(row){
