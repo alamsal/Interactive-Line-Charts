@@ -18,12 +18,14 @@
         return Math.round((this-j1)/8.64e7);
     };
     
+    //Compute Date from DOY
     Date.fromDayOfYear = function(n, y){
         if(!y) y= new Date().getFullYear();
         var d= new Date(y, 0, 1);        
         return new Date(d.setMonth(0, n));       
     };
     
+    //Create formatted X-axis labels
     var generateXAxisLables = function(){
         var formattedLabel = [];    
         for(var day=1;day<366;++day){
@@ -41,7 +43,7 @@
     function plotMultiLineChart(chartData) {   
             
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
-        var width = 800 - margin.left - margin.right;
+        var width = 700 - margin.left - margin.right;
         var height = 400 - margin.top - margin.bottom;
         
         //xAxis interval
@@ -53,7 +55,7 @@
         var yAxisMinValue = 40;
         
         //Axis ticks
-        var xAxisTickNumber = 10;
+        var xAxisTickNumber = 20;
         var yAxisTickNumber = 7;
         
         var x = d3.scale.linear()
@@ -61,7 +63,7 @@
             .range([0, width]);
     
         var y = d3.scale.linear()
-            .domain([yAxisMinValue,yAxisMaxValue])
+            .domain([yAxisMinValue,yAxisMaxValue]).nice()
             .range([height, 0]);    
         
         var xAxisLabels = generateXAxisLables();
@@ -69,9 +71,8 @@
             .scale(x)
             .ticks(xAxisTickNumber)
             .tickFormat(function(d){  
-                 return(xAxisLabels[d]);              
-                
-                })
+                 return(xAxisLabels[d]);            
+               })
             .orient("bottom");
     
         var yAxis = d3.svg.axis()
@@ -150,9 +151,9 @@
             .call(xAxis)
             .selectAll("text")  
                 .style("text-anchor", "end")
-                .attr("dx", "-.8em")
+                .attr("dx", "-.5em")
                 .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)" );
+                .attr("transform", "rotate(-55)" );
     
         // Add the Y Axis
         svg.append("g")
