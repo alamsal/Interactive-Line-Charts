@@ -96,6 +96,20 @@
             
             .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
             .attr("d",line(d.values));
+            
+            //Adding legend
+            var lHeight = 100;
+            var lWidth =100;
+            var lSpace = lWidth/dataGroupByYear.length;
+            
+            svg.append("text")
+                .attr("x", (lSpace / 2) + i * lSpace)
+                .attr("y", lHeight)
+                .style("fill", function(){
+                    return color(d.key);
+                })
+                .attr("class", "legend")
+                .text(d.key);
         });
         
         // Add the X Axis
