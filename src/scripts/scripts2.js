@@ -95,10 +95,10 @@
         //Mouseover tip
         var tip = d3.tip()
             .attr('class', 'd3-tip')
-            .offset([120, 40])
+            .offset([70, 40])
             .html(function(d) {
-                return "<strong>" + d.pDate +                   
-                        " " + d.pValue + "</strong>";
+                return "Date: "+ d.pDate.getFullYear() +"-"+ (parseInt(d.pDate.getMonth())+1) +"-"+ d.pDate.getDate() +                   
+                        "<br/>"+ "Value: "+ d.pValue +" %" ;
                 });
     
         svg.call(tip);       
@@ -122,10 +122,8 @@
                 .attr("d",line(d.values));
             
             //Add legend
-            var lWidth = width-100;
-            var lHeight = 70;
-            var lSpace = lHeight/dataGroupByYear.length;
-            
+            var lWidth = width-30;
+            var lSpace = 20;
             svg.append("text")
                 .attr("x", lWidth)
                 .attr("y", (lSpace / 2) + i * lSpace)
@@ -181,13 +179,12 @@
         svg.selectAll(".dot")
             .data(chartData)
             .enter().append("circle")
-            .attr('class', 'datapoint')
             .attr('class',function(d){
-                return 'circle_'+d.pYearOnly;
+                return 'datapoint circle_'+d.pYearOnly;
             })
             .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
             .attr('cy', function(d) { return y(d.pValue); })
-            .attr('r', 2.5)
+            .attr('r', 3)
             .attr('fill', 'black')
             .attr('stroke', function(d){
                 // Add the colours dynamically
@@ -204,20 +201,17 @@
             .attr("y", 0)
             .attr("x", width/2)
             .style("text-anchor", "middle")
-            .text("Nutters Ridge - Juniper, Utah");
-               
+            .text("Nutters Ridge - Juniper, Utah");               
     }
     
     // set the colour scale
-    var color = d3.scale.category10();   
+    var color = d3.scale.ordinal()
+                .range(colorbrewer.Set1[9]);  
     
     // Read in .csv data and make graph
-    d3.csv("assets/new_format_2015only.csv", parser,
-        function(error, csvData) {
-        
+    d3.csv("assets/all_years_formatted2.csv", parser,
+        function(error, csvData) {     
     
-        
-        
         //Remove NA entries    
         var cleanData = csvData.filter(function(row){
            if(row.Value !='NA'){
