@@ -160,6 +160,15 @@
             .attr("class", "y axis")
             .style("stroke-dasharray", (5, 5))
             .call(yAxis);  
+            
+        svg.append("text")
+            .attr("class", "ylabel")
+            .attr("y", 30 - margin.left) // x and y switched due to rotation!!
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .attr("transform", "rotate(-90)")
+            .style("text-anchor", "middle")
+            .text("Percent");
         
         //Show chart circles
         svg.selectAll(".dot")
@@ -181,6 +190,14 @@
             .attr('stroke-width', '3')
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
+            
+        //Graph title
+        svg.append("text")
+            .attr("class", "graphtitle")
+            .attr("y", 0)
+            .attr("x", width/2)
+            .style("text-anchor", "middle")
+            .text("Nutters Ridge - Juniper, Utah");
                
     }
     
