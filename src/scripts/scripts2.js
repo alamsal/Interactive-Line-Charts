@@ -94,7 +94,7 @@
                     d.color = color(d.key);
                     return d.color; })
                 
-                .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
+                .attr("id", 'line_'+d.key.replace(/\s+/g, '')) // assign ID
                 .attr("d",line(d.values));
             
             //Add legend
@@ -109,7 +109,14 @@
                     return color(d.key);
                 })
                 .attr("class", "legend")
-                .text(d.key);
+                .text(d.key)
+                .on('click',function(){
+                   var active = d.active ? false : true;
+                   var opacity = active ? 0 : 1;                
+                   d3.select("#line_" + d.key).style("opacity", opacity); 
+                   d3.selectAll(".circle_" + d.key).style("opacity", opacity);               
+                   d.active = active;
+                });
         });
         
         // Add the X Axis
@@ -129,6 +136,9 @@
             .data(chartData)
             .enter().append("circle")
             .attr('class', 'datapoint')
+            .attr('class',function(d){
+                return 'circle_'+d.pYearOnly;
+            })
             .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
             .attr('cy', function(d) { return y(d.pValue); })
             .attr('r', 2.5)
