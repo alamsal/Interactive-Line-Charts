@@ -86,7 +86,7 @@
             .entries(chartData);
             
         // put the graph in the "miles" div
-        var svg = d3.select("#graph").append("svg")
+        var svg = d3.select("#graph2").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
@@ -154,11 +154,18 @@
                 .attr("dx", "-.5em")
                 .attr("dy", ".15em")
                 .attr("transform", "rotate(-55)" );
-    
+            
+        svg.append("text")
+            .attr("class", "xlabel")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom)
+            .text("Actual values");
+        
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .style("stroke-dasharray", (5, 5))
+            //.style("stroke-dasharray", (5, 5))
             .call(yAxis);  
             
         svg.append("text")
