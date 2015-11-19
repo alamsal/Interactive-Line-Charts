@@ -88,23 +88,23 @@
            
         dataGroupByYear.forEach(function(d,i){
             svg.append("path")
-            .attr("class", "line")
-            .style("stroke", function() { 
-                // Add the colours dynamically
-                d.color = color(d.key);
-                return d.color; })
+                .attr("class", "line")
+                .style("stroke", function() { 
+                    // Add the colours dynamically
+                    d.color = color(d.key);
+                    return d.color; })
+                
+                .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
+                .attr("d",line(d.values));
             
-            .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
-            .attr("d",line(d.values));
-            
-            //Adding legend
-            var lHeight = 100;
-            var lWidth =100;
-            var lSpace = lWidth/dataGroupByYear.length;
+            //Add legend
+            var lWidth = width-100;
+            var lHeight = 70;
+            var lSpace = lHeight/dataGroupByYear.length;
             
             svg.append("text")
-                .attr("x", (lSpace / 2) + i * lSpace)
-                .attr("y", lHeight)
+                .attr("x", lWidth)
+                .attr("y", (lSpace / 2) + i * lSpace)
                 .style("fill", function(){
                     return color(d.key);
                 })
