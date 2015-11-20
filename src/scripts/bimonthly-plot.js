@@ -78,14 +78,19 @@
     
         svg.call(tip);       
 
-        
-        var line = d3.svg.line()
-            .x(function(d) {
-                return x(d.pDate);
-            } )
+        //Create multiple lines for draw
+        var lineValue = d3.svg.line()
+            .x(function(d) { return x(d.pDate); } )
             .y(function(d) { return y(d.Value); } ); 
-    
-    
+        
+        var lineAverage = d3.svg.line()
+            .x(function(d){return x(d.pDate);})
+            .y(function(d){return y(d.Avg);});
+        
+        var lineLow = d3.svg.line()   
+            .x(function(d){return x(d.pDate);})
+            .y(function(d){return y(d.Low);}); 
+        
         // add the x axis and x-label
         svg.append("g")
             .attr("class", "x axis")
@@ -106,47 +111,81 @@
     
         // add the y axis and y-label
         svg.append("g")
-        .attr("class", "y axis")
-        .attr("transform", "translate(0,0)")
-        .call(yAxis.tickSize(-width, 0, 0));
+            .attr("class", "y axis")
+            .attr("transform", "translate(0,0)")
+            .call(yAxis.tickSize(-width, 0, 0));
         
         svg.append("text")
-        .attr("class", "ylabel")
-        .attr("y", 0 - margin.left) // x and y switched due to rotation!!
-        .attr("x", 0 - (height / 2))
-        .attr("dy", "1em")
-        .attr("transform", "rotate(-90)")
-        .style("text-anchor", "middle")
-        .text("Odometer reading (mi)");
+            .attr("class", "ylabel")
+            .attr("y", 0 - margin.left) // x and y switched due to rotation!!
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .attr("transform", "rotate(-90)")
+            .style("text-anchor", "middle")
+            .text("Odometer reading (mi)");
     
         svg.append("text")
-        .attr("class", "graphtitle")
-        .attr("y", 10)
-        .attr("x", width/2)
-        .style("text-anchor", "middle")
-        .text("MILES OVER TIME");
+            .attr("class", "graphtitle")
+            .attr("y", 10)
+            .attr("x", width/2)
+            .style("text-anchor", "middle")
+            .text("MILES OVER TIME");
     
         // draw the line
         svg.append("path")
-        .attr("d", line(chartData));
-    
+            .attr("d", lineValue(chartData))
+            .style("stroke","blue");
+        
+        svg.append("path")
+            .attr("d", lineLow(chartData))
+            .style("stroke","red");
+        
+        svg.append("path")
+            .attr("d", lineAverage(chartData))
+            .style("stroke-dasharray", ("2,1"))
+            .style("stroke","green");
+            
         svg.selectAll(".dot")
-        .data(chartData)
-        .enter().append("circle")
-        .attr('class', 'datapoint')
-        .attr('cx', function(d) { return x(d.pDate); })
-        .attr('cy', function(d) { return y(d.Value); })
-        .attr('r', 6)
-        .attr('fill', 'white')
-        .attr('stroke', 'steelblue')
-        .attr('stroke-width', '3')
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);    
+            .data(chartData)
+            .enter().append("circle")
+            .attr('class', 'datapoint')
+            .attr('cx', function(d) { return x(d.pDate); })
+            .attr('cy', function(d) { return y(d.Value); })
+            .attr('r', 3)
+            .attr('fill', 'white')
+            .attr('stroke', 'blue')
+            .attr('stroke-width', '3')
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);    
         
          
         
         
-        
+       svg.selectAll(".dot")
+            .data(chartData)
+            .enter().append("circle")
+            .attr('class', 'datapoint')
+            .attr('cx', function(d) { return x(d.pDate); })
+            .attr('cy', function(d) { return y(d.Low); })
+            .attr('r', 3)
+            .attr('fill', 'white')
+            .attr('stroke', 'red')
+            .attr('stroke-width', '3')
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide); 
+            
+       svg.selectAll(".dot")
+            .data(chartData)
+            .enter().append("circle")
+            .attr('class', 'datapoint')
+            .attr('cx', function(d) { return x(d.pDate); })
+            .attr('cy', function(d) { return y(d.Avg); })
+            .attr('r', 3)
+            .attr('fill', 'white')
+            .attr('stroke', 'green')
+            .attr('stroke-width', '3')
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide); 
         
         
         
