@@ -1,22 +1,22 @@
 (function(){
-    
+        
     var plotOptions = {
         csvPath:'assets/all_years_formatted2.csv',
-        width:700,
-        height:400,
-        plotXaxisDescription:"Actual Values ts",
-        plotYaxixDescription:"Percen tt",
-        plotTitleDescription:"Nutters Ridge - Juniper, Utah ta",
-        plotYaxisRangeMin:40,
-        plotYaxixRangeMax:150
-                   
-    };
+        width:900,
+        height:300,
+        plotXaxisDescription:"Actual Values",
+        plotYaxixDescription:"Percent",
+        plotTitleDescription:"Nutters Ridge - Juniper, Utah",
+        plotSubtitleDescription: "Multi year time series (Click on legend to toggle)",
+        plotYaxisRangeMin:20,
+        plotYaxixRangeMax:160,
+        legendFromRight:50,
+        legendSpacing:20          
+    };  
     
     
-    
-    
-    var myval = new PlotMultiYearActualData(plotOptions);
-    myval.plotChart();
+    var multiyearActualData = new PlotMultiYearActualData(plotOptions);
+    multiyearActualData.plotChart();
     
     function PlotMultiYearActualData(plotOptions){
         
@@ -50,15 +50,15 @@
             //Plot main chart
             function plotMultiLineChart(chartData) {   
                     
-                var margin = {top: 30, right: 30, bottom: 75, left: 100};
+                var margin = {top: 100, right: 20, bottom: 70, left: 100};
                                 
                 //xAxis interval
                 var minDay = 1;
                 var maxDaY = 365;
                 
                 //yAxix interval
-                var yAxisMaxValue = 130;
-                var yAxisMinValue = 40;
+                var yAxisMaxValue = plotOptions.plotYaxixRangeMax;
+                var yAxisMinValue = plotOptions.plotYaxisRangeMin;
                 
                 //Axis ticks
                 var xAxisTickNumber = 20;
@@ -127,11 +127,11 @@
                         .attr("d",line(d.values));
                     
                     //Add legend
-                    var lWidth = plotOptions.width-30;
-                    var lSpace = 20;
+                    var lWidth = plotOptions.width - plotOptions.legendFromRight ;
+                    var lSpace = plotOptions.legendSpacing;
                     svg.append("text")
                         .attr("x", lWidth)
-                        .attr("y", (lSpace / 2) + i * lSpace)
+                        .attr("y", (lSpace) + i * lSpace)
                         .style("fill", function(){
                             return color(d.key);
                         })
@@ -210,17 +210,24 @@
                     .on('mouseout', tip.hide);
                     
                 //Graph title
+                             
                 svg.append("text")
                     .attr("class", "graphtitle")
-                    .attr("y", 0)
+                    .attr("y", -40)
                     .attr("x", plotOptions.width/2)
                     .style("text-anchor", "middle")
-                    .text(plotOptions.plotTitleDescription);            
+                    .text(plotOptions.plotTitleDescription);
+               
+               svg.append("text")
+                    .attr("class", "graph-sub-title")
+                    .attr("y", -20)
+                    .attr("x", plotOptions.width/2)
+                    .style("text-anchor", "middle")
+                    .text(plotOptions.plotSubtitleDescription);              
             }
             
-            // set the colour scale
-            var color = d3.scale.ordinal()
-                        .range(colorbrewer.Set1[9]);  
+            // Get dynamic colors from the colourbrewer scale
+            var color = d3.scale.ordinal().range(colorbrewer.Dark2[8]);  
             
             // Read in .csv data and make graph
             d3.csv(plotOptions.csvPath, parser,
