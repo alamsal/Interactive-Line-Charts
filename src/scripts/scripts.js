@@ -9,22 +9,8 @@
         d.pYearOnly = +d.Year;
         d.pDate = format.parse(d.Date);       
         return d; 
-    } 
-    
-    //Compute DOY
-    Date.prototype.dayOfYear = function(){
-        var j1= new Date(this);
-        j1.setMonth(0, 0);
-        return Math.round((this-j1)/8.64e7);
-    };
-    
-    //Compute Date from DOY
-    Date.fromDayOfYear = function(n, y){
-        if(!y) y= new Date().getFullYear();
-        var d= new Date(y, 0, 1);        
-        return new Date(d.setMonth(0, n));       
-    };
-    
+    }    
+   
     //Create formatted X-axis labels
     var generateXAxisLables = function(){
         var formattedLabel = [];    
@@ -32,9 +18,6 @@
             var momentDate = Date.fromDayOfYear(day);
             var label = pad(momentDate.getMonth() + 1)+"-"+pad(momentDate.getDate());
             formattedLabel.push(label);    
-        }                
-        function pad(n){
-            return n > 9 ? "" + n: "0" + n;
         }
         return formattedLabel;
     };

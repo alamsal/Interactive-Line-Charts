@@ -1,80 +1,105 @@
 (function(){
+    var format = d3.time.format("%d-%b");
     
 	function parser(d) {
-        d.pDate = new Date(d.Date);
+        d.pDate = format.parse(d.Date);
         return d;
-    }
-
-    var format = d3.time.format("%d-%b");
+    }  
+    
+    //Create formatted X-axis labels
+    var generateXAxisLables = function(){
+        var formattedLabel = [];    
+        for(var day=1;day<366;++day){
+            var momentDate = Date.fromDayOfYear(day);
+            var label = pad(momentDate.getMonth() + 1)+"-"+pad(momentDate.getDate());
+            formattedLabel.push(label);    
+        }
+        return formattedLabel;
+    };
+     
 
 	function plotBiMonthlyData(chartData){
 		       
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
-        var width = 800 - margin.left - margin.right;
+        var width = 700 - margin.left - margin.right;
         var height = 400 - margin.top - margin.bottom;
-    
-        var minDate = chartData[0].pDate;
-        var maxDate = chartData[chartData.length - 1].pDate;
-        console.log(maxDate);
-        // Set up time based x axis
-        var x = d3.time.scale()
-        .domain([minDate, maxDate])
-        .range([0, width]);
+        
+        //xAxis interval
+        var minDay = 1;
+        var maxDaY = 365;
+        
+        //yAxix interval
+        var yAxisMaxValue = 300;
+        var yAxisMinValue = 40;
+        
+        //Axis ticks
+        var xAxisTickNumber = 20;
+        var yAxisTickNumber = 7;
+        
+        var x = d3.scale.linear()
+            .domain([minDay,maxDaY])
+            .range([0, width]);
     
         var y = d3.scale.linear()
-        .domain([0, 300])
-        .range([height, 0]);
-    
+            .domain([yAxisMinValue,yAxisMaxValue]).nice()
+            .range([height, 0]);    
+        
+        var xAxisLabels = generateXAxisLables();
         var xAxis = d3.svg.axis()
-        .scale(x)
-        .ticks(12)
-        .orient("bottom");
+            .scale(x)
+            .ticks(xAxisTickNumber)
+            .tickFormat(function(d){ return(xAxisLabels[d]);})
+            .orient("bottom");
     
         var yAxis = d3.svg.axis()
-        .scale(y)
-        .ticks(7)
-        .orient("left");
-    
+            .scale(y)
+            .ticks(yAxisTickNumber)
+            .orient("left");
+        
+            
         // put the graph in the "miles" div
         var svg = d3.select("#bi-monthly-graph").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
-        // function to draw the line
-        var line = d3.svg.line()
-         .defined(function(d) { return d.Value != 'NA'; })
-        .x(function(d) { return x(d.pDate); } )
-        .y(function(d) { return y(d.Value); } );
-    
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
         //Mouseover tip
         var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([120, 40])
-        .html(function(d) {
-            return "<strong>" + d.Value +"</strong>";
-        });
+            .attr('class', 'd3-tip')
+            .offset([70, 40])
+            .html(function(d) {
+                return "Date: "+pad(parseInt(d.pDate.getMonth())+1) +"-"+pad(d.pDate.getDate()) +                   
+                        "<br/>"+ "Value: "+ d.Value +" %" ;
+                });
     
-        svg.call(tip);
+        svg.call(tip);       
+
+        
+        var line = d3.svg.line()
+            .x(function(d) {
+                return x(d.pDate.dayOfYear());
+            } )
+            .y(function(d) { return y(d.Value); } ); 
+    
     
         // add the x axis and x-label
         svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .selectAll("text")
-        .attr("y", 9)
-        .attr("x", 9)
-        .attr("dy", ".35em")
-        .attr("transform", "rotate(75)")
-        .style("text-anchor", "start");
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .selectAll("text")  
+                .style("text-anchor", "end")
+                .attr("dx", "-.5em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-55)" );
+        
         svg.append("text")
-        .attr("class", "xlabel")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", height + margin.bottom)
-        .text("Month in 2013");
+            .attr("class", "xlabel")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom)
+            .text("Month in 2013");
     
         // add the y axis and y-label
         svg.append("g")
@@ -105,7 +130,7 @@
         .data(chartData)
         .enter().append("circle")
         .attr('class', 'datapoint')
-        .attr('cx', function(d) { return x(d.pDate); })
+        .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
         .attr('cy', function(d) { return y(d.Value); })
         .attr('r', 6)
         .attr('fill', 'white')
@@ -150,7 +175,7 @@
            return false;
         });
         
-        plotBiMonthlyData(csvData);
+        plotBiMonthlyData(cleanData);
        
     }); 
 })();
