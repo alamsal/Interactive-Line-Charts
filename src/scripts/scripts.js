@@ -129,7 +129,7 @@
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
-            .call(xAxis)
+            .call(xAxis.tickSize(-height, 0, 0))
             .selectAll("text")  
                 .style("text-anchor", "end")
                 .attr("dx", "-.5em")
@@ -147,7 +147,7 @@
         svg.append("g")
             .attr("class", "y axis")
             //.style("stroke-dasharray", (5, 5))
-            .call(yAxis);  
+            .call(yAxis.tickSize(-width, 0, 0));  
             
         svg.append("text")
             .attr("class", "ylabel")
