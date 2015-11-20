@@ -18,15 +18,18 @@
     };
      
 
-	function plotBiMonthlyData(chartData){
+	function plotBiMonthlyData(chartData,dirtyData){
 		       
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
         var width = 700 - margin.left - margin.right;
         var height = 400 - margin.top - margin.bottom;
         
         //xAxis interval
-        var minDay = 1;
-        var maxDaY = 365;
+        //var minDay = 1;
+        //var maxDaY = 365;
+        
+        var minDay = format.parse(dirtyData[0].Date);
+        var maxDay = format.parse(dirtyData[dirtyData.length-1].Date);
         
         //yAxix interval
         var yAxisMaxValue = 300;
@@ -36,8 +39,8 @@
         var xAxisTickNumber = 20;
         var yAxisTickNumber = 7;
         
-        var x = d3.scale.linear()
-            .domain([minDay,maxDaY])
+        var x = d3.time.scale()
+            .domain([minDay,maxDay])
             .range([0, width]);
     
         var y = d3.scale.linear()
@@ -48,7 +51,7 @@
         var xAxis = d3.svg.axis()
             .scale(x)
             .ticks(xAxisTickNumber)
-            .tickFormat(function(d){ return(xAxisLabels[d]);})
+            //.tickFormat(function(d){ return(xAxisLabels[d]);})
             .orient("bottom");
     
         var yAxis = d3.svg.axis()
@@ -78,7 +81,7 @@
         
         var line = d3.svg.line()
             .x(function(d) {
-                return x(d.pDate.dayOfYear());
+                return x(d.pDate);
             } )
             .y(function(d) { return y(d.Value); } ); 
     
@@ -130,7 +133,7 @@
         .data(chartData)
         .enter().append("circle")
         .attr('class', 'datapoint')
-        .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
+        .attr('cx', function(d) { return x(d.pDate); })
         .attr('cy', function(d) { return y(d.Value); })
         .attr('r', 6)
         .attr('fill', 'white')
@@ -175,7 +178,7 @@
            return false;
         });
         
-        plotBiMonthlyData(cleanData);
+        plotBiMonthlyData(cleanData,csvData);
        
     }); 
 })();
