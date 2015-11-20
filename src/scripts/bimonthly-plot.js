@@ -18,7 +18,7 @@
     };
      
 
-	function plotBiMonthlyData(chartData,dirtyData){
+	function plotBiMonthlyData(chartData){
 		       
         var margin = {top: 30, right: 30, bottom: 75, left: 100};
         var width = 700 - margin.left - margin.right;
@@ -33,11 +33,11 @@
         var yAxisMinValue = 40;
         
         //Axis ticks
-        var xAxisTickNumber = 12;
+        var xAxisTickNumber = 20;
         var yAxisTickNumber = 7;
         
-        var x = d3.time.scale()
-            .domain([format.parse(dirtyData[0].Date),format.parse(dirtyData[dirtyData.length-1].Date)])
+        var x = d3.scale.linear()
+            .domain([minDay,maxDaY])
             .range([0, width]);
     
         var y = d3.scale.linear()
@@ -47,16 +47,12 @@
         var xAxisLabels = generateXAxisLables();
         var xAxis = d3.svg.axis()
             .scale(x)
-            .ticks(12)
-            .tickSize(-height, 0, 0)
-            
-            //.tickFormat(function(d){ return(xAxisLabels[d]);})
+            .ticks(xAxisTickNumber)
+            .tickFormat(function(d){ return(xAxisLabels[d]);})
             .orient("bottom");
     
         var yAxis = d3.svg.axis()
             .scale(y)
-            .tickSize(-width, 0, 0)
-            
             .ticks(yAxisTickNumber)
             .orient("left");
         
@@ -82,19 +78,18 @@
         
         var line = d3.svg.line()
             .x(function(d) {
-                return x(d.pDate);
+                return x(d.pDate.dayOfYear());
             } )
             .y(function(d) { return y(d.Value); } ); 
     
     
         // add the x axis and x-label
         svg.append("g")
-            .attr("class", "grid")
+            .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
             .selectAll("text")  
                 .style("text-anchor", "end")
-                .attr("class","mycolor")
                 .attr("dx", "-.5em")
                 .attr("dy", ".15em")
                 .attr("transform", "rotate(-55)" );
@@ -108,18 +103,17 @@
     
         // add the y axis and y-label
         svg.append("g")
-        .attr("class", "grid mycolor")
+        .attr("class", "y axis")
         .attr("transform", "translate(0,0)")
         .call(yAxis);
-        
         svg.append("text")
-            .attr("class", "ylabel")
-            .attr("y", 0 - margin.left) // x and y switched due to rotation!!
-            .attr("x", 0 - (height / 2))
-            .attr("dy", "1em")
-            .attr("transform", "rotate(-90)")
-            .style("text-anchor", "middle")
-            .text("Odometer reading (mi)");
+        .attr("class", "ylabel")
+        .attr("y", 0 - margin.left) // x and y switched due to rotation!!
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .attr("transform", "rotate(-90)")
+        .style("text-anchor", "middle")
+        .text("Odometer reading (mi)");
     
         svg.append("text")
         .attr("class", "graphtitle")
@@ -136,8 +130,7 @@
         .data(chartData)
         .enter().append("circle")
         .attr('class', 'datapoint')
-        //.attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
-        .attr('cx', function(d) { return x(d.pDate); })
+        .attr('cx', function(d) { return x(d.pDate.dayOfYear()); })
         .attr('cy', function(d) { return y(d.Value); })
         .attr('r', 6)
         .attr('fill', 'white')
@@ -182,7 +175,7 @@
            return false;
         });
         
-        plotBiMonthlyData(cleanData,csvData);
+        plotBiMonthlyData(cleanData);
        
     }); 
 })();

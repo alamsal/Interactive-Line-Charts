@@ -53,7 +53,6 @@
         var xAxis = d3.svg.axis()
             .scale(x)
             .ticks(xAxisTickNumber)
-            .tickSize(-height, 0, 0)
             .tickFormat(function(d){  
                  return(xAxisLabels[d]);            
                })
@@ -61,7 +60,6 @@
     
         var yAxis = d3.svg.axis()
             .scale(y)
-            .tickSize(-width, 0, 0)
             .ticks(yAxisTickNumber)
             .orient("left");
         
@@ -129,7 +127,7 @@
         
         // Add the X Axis
         svg.append("g")
-            .attr("class", "grid")
+            .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
             .selectAll("text")  
@@ -147,7 +145,7 @@
         
         // Add the Y Axis
         svg.append("g")
-            .attr("class", "grid")
+            .attr("class", "y axis")
             //.style("stroke-dasharray", (5, 5))
             .call(yAxis);  
             
