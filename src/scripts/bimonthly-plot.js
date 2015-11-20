@@ -71,10 +71,12 @@
         //Mouseover tip
         var tip = d3.tip()
             .attr('class', 'd3-tip')
-            .offset([70, 40])
+            .offset([100, 40])
             .html(function(d) {
                 return "Date: "+pad(parseInt(d.pDate.getMonth())+1) +"-"+pad(d.pDate.getDate()) +                   
-                        "<br/>"+ "Value: "+ d.Value +" %" ;
+                        "<br/>"+ "Annual Value: "+ d.Value +" %" +
+                        "<br/>"+ "Average Value: "+ d.Avg +" %" +
+                        "<br/>"+ "Low Value: "+ d.Low +" %" ;
                 });
     
         svg.call(tip);       
