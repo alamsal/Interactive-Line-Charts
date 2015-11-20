@@ -173,15 +173,32 @@
                     return color[i-1];
                 })
                 .attr("class", "legend")
-                .text(legendText[i-1]);       
+                .text(legendText[i-1])
+                .attr("id",i) 
+                .on('click',function(){
+                   //Toggle chart
+                   var active = this.active ? false : true;
+                   var opacity = active ? 0 : 1;                
+                   d3.select("#line_" + this.id).style("opacity", opacity); 
+                   d3.selectAll(".circle_" + this.id).style("opacity", opacity);               
+                   this.active = active;
+                })                                
+                .on("mouseover", function () {
+                    d3.select("#line_" + this.id).style("stroke-width", 8);
+                    d3.selectAll(".circle_" + this.id).style("stroke-width", 8);
+                })
+                .on("mouseout",function(){
+                    d3.select("#line_" + this.id).style("stroke-width", 4);
+                    d3.selectAll(".circle_" +this.id).style("stroke-width", 4);
+                });        
         }     
         
        
         // display circles    
         svg.selectAll(".dot")
             .data(chartData)
-            .enter().append("circle")
-            .attr('class', 'datapoint')
+            .enter().append("circle")            
+            .attr('class', 'datapoint circle_1')
             .attr('cx', function(d) { return x(d.pDate); })
             .attr('cy', function(d) { return y(d.Value); })
             .attr('r', 3)
@@ -193,8 +210,8 @@
 
        svg.selectAll(".dot")
             .data(chartData)
-            .enter().append("circle")
-            .attr('class', 'datapoint')
+            .enter().append("circle")           
+            .attr('class', 'datapoint circle_2')
             .attr('cx', function(d) { return x(d.pDate); })
             .attr('cy', function(d) { return y(d.Low); })
             .attr('r', 3)
@@ -206,8 +223,8 @@
             
        svg.selectAll(".dot")
             .data(chartData)
-            .enter().append("circle")
-            .attr('class', 'datapoint')
+            .enter().append("circle")           
+            .attr('class', 'datapoint circle_3')
             .attr('cx', function(d) { return x(d.pDate); })
             .attr('cy', function(d) { return y(d.Avg); })
             .attr('r', 3)

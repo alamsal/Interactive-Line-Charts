@@ -125,15 +125,13 @@
                 })
                 
                 .on("mouseover", function () {
-                    //console.log("up");
-                   d3.select("#line_" + d.key).style("stroke-width", 8);
+                    d3.select("#line_" + d.key).style("stroke-width", 8);
                     d3.selectAll(".circle_" + d.key).style("stroke-width", 8);
                 })
                 .on("mouseout",function(){
                     d3.select("#line_" + d.key).style("stroke-width", 4);
                     d3.selectAll(".circle_" + d.key).style("stroke-width", 4);
-                });
-                
+                });               
                 
         });
         
