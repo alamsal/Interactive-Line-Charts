@@ -42,11 +42,11 @@
         var yAxisTickNumber = 7;
         
         var x = d3.scale.linear()
-            .domain([minDay,maxDaY])
+            .domain([minDay,maxDaY]).nice()
             .range([0, width]);
     
         var y = d3.scale.linear()
-            .domain([yAxisMinValue,yAxisMaxValue]).nice()
+            .domain([yAxisMinValue,yAxisMaxValue])
             .range([height, 0]);    
         
         var xAxisLabels = generateXAxisLables();
@@ -194,8 +194,8 @@
             .attr("y", 0)
             .attr("x", width/2)
             .style("text-anchor", "middle")
-            .text("Nutters Ridge - Juniper, Utah");               
-    }
+            .text("Nutters Ridge - Juniper, Utah");            
+     }
     
     // set the colour scale
     var color = d3.scale.ordinal()
