@@ -40,18 +40,19 @@
         var xAxisTickNumber = 20;
         var yAxisTickNumber = 7;
         
-        var x = d3.time.scale()
+        var x = d3.time.scale().nice()
             .domain([minDay,maxDay])
             .range([0, width]);
     
         var y = d3.scale.linear()
-            .domain([yAxisMinValue,yAxisMaxValue]).nice()
+            .domain([yAxisMinValue,yAxisMaxValue])
             .range([height, 0]);    
         
         //var xAxisLabels = generateXAxisLables();
         var xAxis = d3.svg.axis()
             .scale(x)
-            .ticks(xAxisTickNumber)
+            .outerTickSize(0)
+            //.ticks(xAxisTickNumber)
             //.tickFormat(function(d){ return(xAxisLabels[d]);})
             .orient("bottom");
     
@@ -234,7 +235,9 @@
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide); 
         
-        
+        //Begin X-axis with January label       
+        d3.select(svg.selectAll("text")[0][0]).attr('id','begin-axis');
+        document.getElementById('begin-axis').textContent = "January";
         
         
         
