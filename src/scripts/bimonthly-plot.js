@@ -47,7 +47,7 @@
             .domain([yAxisMinValue,yAxisMaxValue]).nice()
             .range([height, 0]);    
         
-        var xAxisLabels = generateXAxisLables();
+        //var xAxisLabels = generateXAxisLables();
         var xAxis = d3.svg.axis()
             .scale(x)
             .ticks(xAxisTickNumber)
@@ -90,7 +90,7 @@
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
-            .call(xAxis)
+            .call(xAxis.tickSize(-height, 0, 0))
             .selectAll("text")  
                 .style("text-anchor", "end")
                 .attr("dx", "-.5em")
@@ -108,7 +108,8 @@
         svg.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate(0,0)")
-        .call(yAxis);
+        .call(yAxis.tickSize(-width, 0, 0));
+        
         svg.append("text")
         .attr("class", "ylabel")
         .attr("y", 0 - margin.left) // x and y switched due to rotation!!
@@ -142,7 +143,7 @@
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);    
         
-        
+         
         
         
         
