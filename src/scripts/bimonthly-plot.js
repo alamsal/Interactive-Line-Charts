@@ -1,3 +1,4 @@
+// jshint ignore: start
 (function(){
     var format = d3.time.format("%d-%b");
     
@@ -107,7 +108,7 @@
             .attr("text-anchor", "middle")
             .attr("x", width / 2)
             .attr("y", height + margin.bottom)
-            .text("Month in 2013");
+            .text("Bi-monthly Values");
     
         // add the y axis and y-label
         svg.append("g")
@@ -117,34 +118,64 @@
         
         svg.append("text")
             .attr("class", "ylabel")
-            .attr("y", 0 - margin.left) // x and y switched due to rotation!!
+            .attr("y", 30 - margin.left) // x and y switched due to rotation!!
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .attr("transform", "rotate(-90)")
             .style("text-anchor", "middle")
-            .text("Odometer reading (mi)");
+            .text("Percent");
     
         svg.append("text")
             .attr("class", "graphtitle")
+            .attr("y", -10)
+            .attr("x", width/2)
+            .style("text-anchor", "middle")
+            .text("Squaw Peak - Oak, Gambel");
+       
+       svg.append("text")
+            .attr("class", "graph-sub-title")
             .attr("y", 10)
             .attr("x", width/2)
             .style("text-anchor", "middle")
-            .text("MILES OVER TIME");
-    
-        // draw the line
+            .text("2002 - 2015");
+            
+        // draw the lines
         svg.append("path")
             .attr("d", lineValue(chartData))
+            .attr("id", 'line_1')
             .style("stroke","blue");
+            
         
         svg.append("path")
             .attr("d", lineLow(chartData))
+            .attr("id", 'line_2')
             .style("stroke","red");
         
         svg.append("path")
             .attr("d", lineAverage(chartData))
+            .attr("id", 'line_3')
             .style("stroke-dasharray", ("2,1"))
             .style("stroke","green");
-            
+        
+        //Add legends
+        var lWidth = width-30;
+        var lSpace = 20;
+        var color =['blue','red','green'];
+        var legendText = ['Value','Average','Low'];
+        var lineNumbers = 3;
+        for(var i=1;i<=lineNumbers;++i){
+            svg.append("text")
+                .attr("x", lWidth)
+                .attr("y", (lSpace / 2) + i * lSpace)
+                .style("fill", function(){
+                    return color[i-1];
+                })
+                .attr("class", "legend")
+                .text(legendText[i-1]);       
+        }     
+        
+       
+        // display circles    
         svg.selectAll(".dot")
             .data(chartData)
             .enter().append("circle")
@@ -152,15 +183,12 @@
             .attr('cx', function(d) { return x(d.pDate); })
             .attr('cy', function(d) { return y(d.Value); })
             .attr('r', 3)
-            .attr('fill', 'white')
+            .attr('fill', 'black')
             .attr('stroke', 'blue')
             .attr('stroke-width', '3')
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);    
-        
-         
-        
-        
+
        svg.selectAll(".dot")
             .data(chartData)
             .enter().append("circle")
@@ -168,7 +196,7 @@
             .attr('cx', function(d) { return x(d.pDate); })
             .attr('cy', function(d) { return y(d.Low); })
             .attr('r', 3)
-            .attr('fill', 'white')
+            .attr('fill', 'black')
             .attr('stroke', 'red')
             .attr('stroke-width', '3')
             .on('mouseover', tip.show)
@@ -181,7 +209,7 @@
             .attr('cx', function(d) { return x(d.pDate); })
             .attr('cy', function(d) { return y(d.Avg); })
             .attr('r', 3)
-            .attr('fill', 'white')
+            .attr('fill', 'black')
             .attr('stroke', 'green')
             .attr('stroke-width', '3')
             .on('mouseover', tip.show)
