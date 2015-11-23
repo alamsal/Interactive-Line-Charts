@@ -152,22 +152,21 @@
                     .attr("d", lineValue(chartData))
                     .attr("id", 'line_1')
                     .style("stroke","blue");                    
-                
+               svg.append("path")
+                    .attr("d", lineAverage(chartData))
+                    .attr("id", 'line_2')
+                    .style("stroke-dasharray", ("2,1"))
+                    .style("stroke","green");                    
                 svg.append("path")
                     .attr("d", lineLow(chartData))
-                    .attr("id", 'line_2')
-                    .style("stroke","red");
-                
-                svg.append("path")
-                    .attr("d", lineAverage(chartData))
                     .attr("id", 'line_3')
-                    .style("stroke-dasharray", ("2,1"))
-                    .style("stroke","green");
+                    .style("stroke","red");               
+
                 
                 //Add legends
                 var lWidth = plotOptions.width-plotOptions.legendFromRight;
                 var lSpace = plotOptions.legendSpacing;
-                var color =['blue','red','green'];
+                var color =['blue','green','red'];
                 var legendText = ['Value','Average','Low'];
                 var lineNumbers = 3;
                 for(var i=1;i<=lineNumbers;++i){
@@ -217,7 +216,7 @@
             svg.selectAll(".dot")
                     .data(chartData)
                     .enter().append("circle")           
-                    .attr('class', 'datapoint circle_2')
+                    .attr('class', 'datapoint circle_3')
                     .attr('cx', function(d) { return x(d.pDate); })
                     .attr('cy', function(d) { return y(d.Low); })
                     .attr('r', 3)
@@ -230,7 +229,7 @@
             svg.selectAll(".dot")
                     .data(chartData)
                     .enter().append("circle")           
-                    .attr('class', 'datapoint circle_3')
+                    .attr('class', 'datapoint circle_2')
                     .attr('cx', function(d) { return x(d.pDate); })
                     .attr('cy', function(d) { return y(d.Avg); })
                     .attr('r', 3)
