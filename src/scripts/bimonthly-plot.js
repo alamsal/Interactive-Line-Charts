@@ -5,22 +5,20 @@
         csvPath:'assets/BiMonthly.csv',
         chartId:'bi-monthly-graph',
         width:900,
-        height:300,
+        height:500,
         plotXaxisDescription:"Bi-monthly Values",
         plotYaxixDescription:"Percent",
         plotTitleDescription:"Squaw Peak-Oak, Gambel",
         plotSubtitleDescription: "2002-2015 (Click legends to toggle)",
-        plotYaxisRangeMin:20,
-        plotYaxixRangeMax:160,
-        legendFromRight:50,
+        plotYaxisRangeMin:40,
+        plotYaxixRangeMax:300,
+        legendFromRight:150,
         legendSpacing:20          
     };  
     
     var plotBimonthly = new PlotBiMonthlyValues(bimonthlyPlotOptions);
         plotBimonthly.plotChart();
-        
-    
-    
+
     function PlotBiMonthlyValues(plotOptions){
         this.plotChart = plotInteractiveBiMonthlyChart;
         
@@ -30,40 +28,21 @@
             function parser(d) {
                 d.pDate = format.parse(d.Date);
                 return d;
-            }
-              
-            /*
-            //Create formatted X-axis labels
-            var generateXAxisLables = function(){
-                var formattedLabel = [];    
-                for(var day=1;day<366;++day){
-                    var momentDate = Date.fromDayOfYear(day);
-                    var label = pad(momentDate.getMonth() + 1)+"-"+pad(momentDate.getDate());
-                    formattedLabel.push(label);    
-                }
-                return formattedLabel;
-            };
-            */
-        
+            }              
+      
             function plotBiMonthlyData(chartData,allCsvData){
                    
-                var margin = {top: 30, right: 30, bottom: 75, left: 100};
-                //var width = 700 - margin.left - margin.right;
-                //var height = 400 - margin.top - margin.bottom;
-                
-                //xAxis interval
-                //var minDay = 1;
-                //var maxDaY = 365;
+                var margin = {top: 70, right: 30, bottom: 75, left: 100};
                 
                 var minDay = format.parse(allCsvData[0].Date);
                 var maxDay = format.parse(allCsvData[allCsvData.length-1].Date);
                 
                 //yAxix interval
-                var yAxisMaxValue = 300;
-                var yAxisMinValue = 40;
+                var yAxisMaxValue = plotOptions.plotYaxixRangeMax;
+                var yAxisMinValue = plotOptions.plotYaxisRangeMin;
                 
                 //Axis ticks
-                var xAxisTickNumber = 20;
+                //var xAxisTickNumber = 20;
                 var yAxisTickNumber = 7;
                 
                 var x = d3.time.scale().nice()
@@ -136,8 +115,8 @@
                     .attr("class", "xlabel")
                     .attr("text-anchor", "middle")
                     .attr("x", plotOptions.width / 2)
-                    .attr("y", plotOptions.height + margin.bottom)
-                    .text("Bi-monthly Values");
+                    .attr("y", plotOptions.height-10 + margin.bottom)
+                    .text(plotOptions.plotXaxisDescription);
             
                 // add the y axis and y-label
                 svg.append("g")
@@ -152,21 +131,21 @@
                     .attr("dy", "1em")
                     .attr("transform", "rotate(-90)")
                     .style("text-anchor", "middle")
-                    .text("Percent");
+                    .text(plotOptions.plotYaxixDescription);
             
                 svg.append("text")
                     .attr("class", "graphtitle")
-                    .attr("y", -10)
+                    .attr("y", -40)
                     .attr("x", plotOptions.width/2)
                     .style("text-anchor", "middle")
-                    .text("Squaw Peak - Oak, Gambel");
+                    .text(plotOptions.plotTitleDescription);
             
             svg.append("text")
                     .attr("class", "graph-sub-title")
-                    .attr("y", 10)
+                    .attr("y", -20)
                     .attr("x", plotOptions.width/2)
                     .style("text-anchor", "middle")
-                    .text("2002 - 2015");
+                    .text(plotOptions.plotSubtitleDescription);
                     
                 // draw the lines
                 svg.append("path")
@@ -186,8 +165,8 @@
                     .style("stroke","green");
                 
                 //Add legends
-                var lWidth = plotOptions.width-30;
-                var lSpace = 20;
+                var lWidth = plotOptions.width-plotOptions.legendFromRight;
+                var lSpace = plotOptions.legendSpacing;
                 var color =['blue','red','green'];
                 var legendText = ['Value','Average','Low'];
                 var lineNumbers = 3;
@@ -227,11 +206,7 @@
                     .enter().append("circle")            
                     .attr('class', 'datapoint circle_1')
                     .attr('cx', function(d) { return x(d.pDate); })
-                    .attr('cy', function(d) { 
-                        
-                        return y(d.Value);
-                        
-                         })
+                    .attr('cy', function(d) { return y(d.Value); })
                     .attr('r', 3)
                     .attr('fill', 'black')
                     .attr('stroke', 'blue')
@@ -244,10 +219,7 @@
                     .enter().append("circle")           
                     .attr('class', 'datapoint circle_2')
                     .attr('cx', function(d) { return x(d.pDate); })
-                    .attr('cy', function(d) {
-                         
-                         return y(d.Low);
-                          })
+                    .attr('cy', function(d) { return y(d.Low); })
                     .attr('r', 3)
                     .attr('fill', 'black')
                     .attr('stroke', 'red')
@@ -276,7 +248,7 @@
         
             // Read in .csv data and make graph
             d3.csv(plotOptions.csvPath, parser,
-                function(error, csvData) {     
+                function(error, csvData) {    
             
                 //Remove NA entries    
                 var cleanData = csvData.filter(function(row){

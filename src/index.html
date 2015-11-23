@@ -4,60 +4,19 @@
     <title>Simple D3 Visualization</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="http://cdn.rawgit.com/mbostock/d3/master/lib/colorbrewer/colorbrewer.css">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
     <script src = "http://d3js.org/d3.v3.min.js"></script>
     <script src = "http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src = "http://cdn.rawgit.com/mbostock/d3/16d786c24db4dba6dd71ebfaa43b407b8ce8dfea/lib/colorbrewer/colorbrewer.js"></script>
-    <script src="scripts/utils.js"></script>
+    <script src=  "scripts/utils.js"></script>
     <script src = "scripts/scripts.js"></script>
     <script src = "scripts/bimonthly-plot.js"></script>
-    
-    <style>
-    
-      .d3-tip {
-        line-height: 1;
-        font-weight: bold;
-        padding: 12px;
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        border-radius: 2px;
-        
-      }
-      .legend {
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      path {
-        stroke: steelblue;
-        stroke-width: 4;
-        fill: none;
-      }
-      .axis path, .axis line {
-        fill: none;
-        stroke:grey;
-        opacity: 0.5;
-        shape-rendering: crispEdges;
-      }
-      .datapoint:hover{
-        fill: white;
-        cursor: pointer;
-      }
-      .xlabel, .ylabel, .graphtitle {
-        font-weight:bold;
-	    font-size:20px;
-      }
-      
 
-   
-    </style>
 </head>
-<body>    
-    <div id="graph" style="width: 600px; height: 400px"></div> 
-    <br/>
-    <br/>
-    <br/><br/><br/><br/>
-    
-    <div id="bi-monthly-graph" style="width: 600px; height: 400px"></div>
+<body>  
+      
+    <div id="graph" style="width:100%; height:100%"></div>     
+    <div id="bi-monthly-graph" style="width: 100%; height: 100%"></div>
     
 </body>
 </html>
