@@ -2,6 +2,7 @@
         
     var plotOptions = {
         csvPath:'assets/all_years_formatted2.csv',
+        chartId:'graph',
         width:900,
         height:300,
         plotXaxisDescription:"Actual Values",
@@ -92,7 +93,7 @@
                     .entries(chartData);
                     
                 // put the graph in the "miles" div
-                var svg = d3.select("#graph").append("svg")
+                var svg = d3.select(("#"+plotOptions.chartId)).append("svg")
                     .attr("width", plotOptions.width + margin.left + margin.right)
                     .attr("height", plotOptions.height + margin.top + margin.bottom)
                     .append("g")
