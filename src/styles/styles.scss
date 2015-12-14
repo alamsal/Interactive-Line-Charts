@@ -1,0 +1,34 @@
+.d3-tip {
+line-height: 1;
+font-weight: bold;
+padding: 12px;
+background: rgba(0, 0, 0, 0.8);
+color: #fff;
+border-radius: 2px;
+
+}
+.legend {
+font-size: 20px;
+font-weight: bold;
+cursor: pointer;
+}
+path {
+stroke: steelblue;
+stroke-width: 4;
+fill: none;
+}
+.axis path, .axis line {
+fill: none;
+stroke:grey;
+opacity: 0.5;
+shape-rendering: crispEdges;
+}
+.datapoint:hover{
+fill: white;
+cursor: pointer;
+}
+.xlabel, .ylabel, .graphtitle {
+font-weight:bold;
+font-size:20px;
+height:30px;
+}
